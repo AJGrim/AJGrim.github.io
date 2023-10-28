@@ -1,5 +1,5 @@
 /* Reset some default browser styles */
-body, h1, h2, h3, p, ul, li {
+body, h1, h2, h3, p {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
@@ -18,6 +18,15 @@ header {
     text-align: center;
     padding: 60px 0;
     margin-bottom: 40px;
+}
+
+#profile-pic {
+    width: 150px;           /* Adjust width as needed */
+    height: 150px;          /* Adjust height as needed */
+    border-radius: 50%;     /* Makes the photo circular */
+    margin-bottom: 20px;    /* Spacing between the photo and the name */
+    border: 3px solid #fff; /* Optional white border */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2); /* Optional light shadow for depth */
 }
 
 header h1 {
