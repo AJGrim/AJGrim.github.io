@@ -13,20 +13,32 @@ body {
 }
 
 header {
-    background-color: #333;  /* Slightly lighter dark shade for header */
+    background-color: #333;  
     color: #fff;
-    text-align: center;
-    padding: 60px 0;
+    padding: 100px 0;
     margin-bottom: 40px;
+    display: grid;             /* Use grid layout */
+    justify-content: center;   /* Center the content */
+    align-items: center;       /* Center the content vertically */
+    position: relative;        /* For absolute positioning of the profile picture */
+    grid-template-columns: 1fr; /* Create one column that takes up all available space */
+}
+
+#name-container {
+    grid-column: 1;          /* Place the container in the grid column */
+    text-align: center;      /* Center the text within the container */
 }
 
 #profile-pic {
-    width: 150px;           /* Adjust width as needed */
-    height: 150px;          /* Adjust height as needed */
-    border-radius: 50%;     /* Makes the photo circular */
-    margin-bottom: 20px;    /* Spacing between the photo and the name */
-    border: 3px solid #fff; /* Optional white border */
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2); /* Optional light shadow for depth */
+    width: 150px;           
+    height: 150px;          
+    border-radius: 50%;    
+    border: 3px solid #fff; 
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+    position: absolute;     /* Absolutely position the profile picture */
+    top: 50%;               /* Center it vertically */
+    transform: translateY(-50%); /* Adjust for perfect vertical centering */
+    right: calc(50% - 350px); /* Position it to the left of the center by half its width + desired spacing */
 }
 
 header h1 {
