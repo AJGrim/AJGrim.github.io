@@ -18,6 +18,16 @@ header {
     margin-bottom: 40px;
 }
 
+section {
+	display: center;
+	text-align: center;
+    background-color: #2a2a2a;  /* Dark background for sections */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);  /* Light shadow for depth */
+}
+
 a {
     display: inline-block;
     background-color: #555;
