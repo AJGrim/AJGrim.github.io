@@ -14,8 +14,12 @@
 			default-src 'self';
 			img-src 'self' https:;
 			style-src 'self' 'unsafe-inline';
-			script-src 'self';
+			font-src 'self' data:;
+			script-src 'self' 'unsafe-inline';
 			connect-src https://formspree.io;
+			frame-src 'none';
+			object-src 'none;
+			base-uri 'self';
 		">
 			
 		<link rel="stylesheet" href="assets/css/main.css" />
