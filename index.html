@@ -12,9 +12,9 @@
 		<meta http-equiv="Content-Security-Policy"
 			content="
 				default-src 'self';
-				img-src 'self' https:;
-				style-src 'self' 'unsafe-inline';
-				font-src 'self' data:;
+				img-src 'self' https: data:;
+				style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+				font-src 'self' data: https://fonts.gstatic.com;
 				script-src 'self' 'unsafe-inline';
 				connect-src https://formspree.io;
 				form-action 'self' https://formspree.io;
@@ -22,7 +22,6 @@
 				object-src 'none';
 				base-uri 'self';
 			">
-			
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
@@ -40,7 +39,7 @@
 						<div class="content">
 							<div class="inner">
 								<h1>Adam Grim</h1>
-								<p>Mechanical Engineer with a Concentration in Aerospace<br />
+								<p>Masters of Science in Mechanical Engineer with a Concentration in Aerospace<br />
 								through the <a href="https://www.udel.edu/">University of Delaware</a></p>
 							</div>
 						</div>
@@ -62,7 +61,7 @@
 							<article id="intro">
 								<h2 class="major">A Little Bit About Me</h2>
 								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
-								<p>I have been in the Mechanical Engineering field since 2020, spending my time with on-hands experiences in woodshops, fabrication/additive manufacturing labs, and machine shops. I have also prioritized some of my education to Aerospace specific courses as my primary interest.</p>
+								<p>My name is Adam Grim, a mechanical engineer, earning my Bachelor of Science in Mechanical Engineering in 2024 and my Master of Science in Mechanical Engineering in 2025 through the University of Delaware. I find my expertise to fall under fluid mechanics and heat transfer, where I have always enjoyed the fundamentals of problem solving, simulations and then proving the results in experimentation. I've pursued side projects that tie together analysis and build work, including flow characterization, pressure-loss studies, and thermal management experiments. I value clear assumptions, clean documentation, and designs that hold up under testing. I am especially interested in applications where efficiency, reliability, and thermal performance are critical, and aspects of aeronautical analysis are present.</p>
 								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
 							</article>
 
@@ -105,7 +104,7 @@
 									</ul>
 								</form>
 								<ul class="icons">
-									<button id="secretButton"><a  class="icon regular fa-paper-plane"><span class="label">Secret</span></a></button>
+									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
 									<li><a href="https://www.linkedin.com/in/adam-j-grim/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
 									<li><a href="https://github.com/AJGrim" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
@@ -372,7 +371,6 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-
 
 	</body>
 </html>
