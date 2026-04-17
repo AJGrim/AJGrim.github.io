@@ -1,0 +1,1456 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Projects | Adam Grim</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="Engineering projects by Adam Grim — fluid mechanics, heat transfer, aerospace, and simulation." />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	<style>
+
+		/* ── Reset / base ───────────────────────────── */
+		*, *::before, *::after { box-sizing: border-box; }
+
+		body {
+			background: #1b1f22;
+			color: #ffffff;
+			font-family: "Source Sans Pro", sans-serif;
+			font-weight: 300;
+			margin: 0;
+			min-height: 100vh;
+		}
+
+		/* ── Page transitions ────────────────────────── */
+		@keyframes pageEnter {
+			from { opacity: 0; transform: translateY(18px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+		#page-wrap {
+			animation: pageEnter 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+		}
+		#transition-curtain {
+			position: fixed;
+			inset: 0;
+			background: #1b1f22;
+			z-index: 9999;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity 0.4s ease-in;
+		}
+		#transition-curtain.closing {
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		/* ── Back link ───────────────────────────────── */
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			color: rgba(255,255,255,0.6);
+			text-decoration: none;
+			font-size: 0.75rem;
+			letter-spacing: 0.2rem;
+			text-transform: uppercase;
+			border-bottom: none;
+			padding: 2rem 2.5rem;
+			transition: color 0.2s ease-in-out;
+		}
+		.back-link:hover { color: #ffffff; border-bottom: none; }
+		.back-link svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+		/* ── Page header ─────────────────────────────── */
+		.page-header {
+			text-align: center;
+			padding: 1rem 2rem 3rem;
+		}
+		.page-header h1 {
+			font-size: 2.25rem;
+			font-weight: 600;
+			letter-spacing: 0.5rem;
+			text-transform: uppercase;
+			margin: 0 0 0.75rem;
+			color: #ffffff;
+		}
+		.page-header .underline {
+			width: 60px;
+			height: 1px;
+			background: #ffffff;
+			margin: 0 auto 1.25rem;
+		}
+		.page-header p {
+			color: rgba(255,255,255,0.55);
+			font-size: 0.8rem;
+			letter-spacing: 0.2rem;
+			text-transform: uppercase;
+			margin: 0;
+		}
+
+		/* ── Filter bar ──────────────────────────────── */
+		.filter-wrap {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 0.6rem;
+			padding: 0 2rem 3rem;
+		}
+		.filter-bar {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+			position: relative;
+		}
+		.filter-btn {
+			background: transparent;
+			border: 1px solid rgba(255,255,255,0.3);
+			color: rgba(255,255,255,0.6);
+			border-radius: 4px;
+			padding: 0.4rem 1.1rem;
+			font-size: 0.7rem;
+			letter-spacing: 0.2rem;
+			text-transform: uppercase;
+			cursor: pointer;
+			transition: border-color 0.2s, color 0.2s, background 0.2s;
+			font-family: "Source Sans Pro", sans-serif;
+			font-weight: 300;
+			position: relative;
+		}
+		.filter-btn:hover {
+			border-color: rgba(255,255,255,0.7);
+			color: rgba(255,255,255,0.9);
+		}
+		.filter-btn.active {
+			border-color: #ffffff;
+			color: #ffffff;
+			background: rgba(255,255,255,0.09);
+		}
+		/* Visible count of displayed cards */
+		.filter-count {
+			font-size: 0.65rem;
+			letter-spacing: 0.18rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.3);
+			min-height: 1rem;
+			transition: opacity 0.3s;
+		}
+		.filter-count.updating { opacity: 0; }
+
+		/* ── Card grid ───────────────────────────────── */
+		.card-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 2rem;
+			padding: 0 2.5rem 5rem;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		/* ── Flip card structure ─────────────────────── */
+		.flip-card {
+			perspective: 1200px;
+			height: 380px;
+			cursor: pointer;
+			/* JS controls opacity/transform for filter animation */
+		}
+		.flip-card.hidden {
+			display: none;
+		}
+		.flip-card.filter-exit {
+			animation: cardExit 0.2s ease forwards;
+		}
+		.flip-card.filter-enter {
+			animation: cardEnter 0.35s ease both;
+		}
+		@keyframes cardExit {
+			to { opacity: 0; transform: scale(0.93) translateY(8px); }
+		}
+		@keyframes cardEnter {
+			from { opacity: 0; transform: scale(0.93) translateY(8px); }
+			to   { opacity: 1; transform: scale(1) translateY(0); }
+		}
+
+		.flip-card-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+			transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+		}
+		.flip-card.flipped .flip-card-inner {
+			transform: rotateY(180deg);
+		}
+
+		/* ── Card faces ──────────────────────────────── */
+		.card-front,
+		.card-back {
+			position: absolute;
+			inset: 0;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			border-radius: 4px;
+			overflow: hidden;
+		}
+
+		/* ── Front face ──────────────────────────────── */
+		.card-front {
+			background: rgba(27,31,34,0.9);
+			border: 1px solid rgba(255,255,255,0.15);
+			display: flex;
+			flex-direction: column;
+			transition: border-color 0.25s;
+		}
+		.flip-card:hover .card-front {
+			border-color: rgba(255,255,255,0.35);
+		}
+
+		/* Shimmer sweep on hover */
+		.card-front::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				115deg,
+				transparent 0%,
+				transparent 40%,
+				rgba(255,255,255,0.04) 50%,
+				transparent 60%,
+				transparent 100%
+			);
+			background-size: 200% 100%;
+			background-position: -100% 0;
+			transition: background-position 0.6s ease;
+			pointer-events: none;
+			z-index: 2;
+		}
+		.flip-card:hover .card-front::after {
+			background-position: 200% 0;
+		}
+
+		/* Corner-fold effect on hover */
+		.card-fold-corner {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width: 0 0 0 0;
+			border-color: transparent transparent #1b1f22 transparent;
+			transition: border-width 0.3s ease;
+			filter: drop-shadow(-2px -2px 2px rgba(0,0,0,0.4));
+			z-index: 3;
+			pointer-events: none;
+		}
+		.flip-card:hover .card-fold-corner {
+			border-width: 0 0 42px 42px;
+		}
+
+		/* Card image area */
+		.card-image {
+			width: 100%;
+			height: 180px;
+			overflow: hidden;
+			background: rgba(255,255,255,0.04);
+			position: relative;
+			flex-shrink: 0;
+		}
+		.card-image img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			transition: transform 0.4s ease;
+			filter: brightness(0.85);
+		}
+		.flip-card:hover .card-image img {
+			transform: scale(1.04);
+		}
+		.card-image.placeholder {
+			background: linear-gradient(135deg,
+				rgba(255,255,255,0.06) 0%,
+				rgba(255,255,255,0.02) 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		/* Category-tinted placeholder bar */
+		.card-image.placeholder::before {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background: var(--accent, rgba(255,255,255,0.2));
+			opacity: 0.7;
+		}
+		.placeholder-icon {
+			font-size: 2.5rem;
+			opacity: 0.18;
+			user-select: none;
+		}
+
+		/* Card text */
+		.card-body {
+			padding: 1.25rem 1.4rem 1rem;
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+		}
+		.card-category {
+			font-size: 0.62rem;
+			letter-spacing: 0.22rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.4);
+			margin: 0 0 0.4rem;
+		}
+		.card-title {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #ffffff;
+			margin: 0 0 0.6rem;
+			line-height: 1.35;
+			letter-spacing: 0.05rem;
+			text-transform: uppercase;
+		}
+		.card-summary {
+			font-size: 0.82rem;
+			color: rgba(255,255,255,0.55);
+			line-height: 1.6;
+			margin: 0 0 0.9rem;
+			flex: 1;
+		}
+		.tag-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem;
+		}
+		.tag {
+			font-size: 0.6rem;
+			letter-spacing: 0.12rem;
+			text-transform: uppercase;
+			border: 1px solid rgba(255,255,255,0.2);
+			color: rgba(255,255,255,0.5);
+			border-radius: 2px;
+			padding: 0.2rem 0.55rem;
+		}
+		.flip-hint {
+			position: absolute;
+			bottom: 0.7rem;
+			left: 1.4rem;
+			font-size: 0.6rem;
+			letter-spacing: 0.18rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.22);
+			transition: color 0.2s;
+			z-index: 4;
+		}
+		.flip-card:hover .flip-hint { color: rgba(255,255,255,0.5); }
+
+		/* ── Back face ───────────────────────────────── */
+		.card-back {
+			background: rgba(22,26,29,0.98);
+			border: 1px solid rgba(255,255,255,0.25);
+			transform: rotateY(180deg);
+			display: flex;
+			flex-direction: column;
+			padding: 1.4rem 1.5rem 1rem;
+			overflow-y: auto;
+		}
+		.card-back::-webkit-scrollbar { width: 3px; }
+		.card-back::-webkit-scrollbar-track { background: transparent; }
+		.card-back::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+		.back-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 0.9rem;
+			gap: 0.5rem;
+		}
+		.back-title {
+			font-size: 0.92rem;
+			font-weight: 600;
+			color: #ffffff;
+			text-transform: uppercase;
+			letter-spacing: 0.1rem;
+			line-height: 1.35;
+			margin: 0;
+		}
+		.close-btn {
+			background: transparent;
+			border: 1px solid rgba(255,255,255,0.2);
+			color: rgba(255,255,255,0.5);
+			border-radius: 50%;
+			width: 26px;
+			height: 26px;
+			font-size: 0.75rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			transition: all 0.2s;
+			font-family: "Source Sans Pro", sans-serif;
+		}
+		.close-btn:hover {
+			border-color: #ffffff;
+			color: #ffffff;
+			background: rgba(255,255,255,0.07);
+		}
+
+		.back-divider {
+			width: 40px;
+			height: 1px;
+			background: rgba(255,255,255,0.2);
+			margin: 0 0 0.85rem;
+		}
+		.back-section {
+			margin-bottom: 0.75rem;
+		}
+		.back-section-label {
+			font-size: 0.6rem;
+			letter-spacing: 0.22rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.35);
+			margin: 0 0 0.3rem;
+		}
+		.back-section p {
+			font-size: 0.8rem;
+			color: rgba(255,255,255,0.7);
+			line-height: 1.65;
+			margin: 0;
+		}
+		.back-section ul {
+			margin: 0;
+			padding-left: 1.1rem;
+			list-style: disc;
+		}
+		.back-section ul li {
+			font-size: 0.79rem;
+			color: rgba(255,255,255,0.7);
+			line-height: 1.6;
+			padding-left: 0.25rem;
+			margin-bottom: 0.2rem;
+		}
+
+		/* Full-details button on card back */
+		.back-footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+			margin-top: auto;
+			padding-top: 0.7rem;
+		}
+		.back-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem;
+			flex: 1;
+		}
+		.details-btn {
+			background: transparent;
+			border: 1px solid rgba(255,255,255,0.3);
+			color: rgba(255,255,255,0.6);
+			border-radius: 3px;
+			padding: 0.3rem 0.8rem;
+			font-size: 0.62rem;
+			letter-spacing: 0.18rem;
+			text-transform: uppercase;
+			cursor: pointer;
+			transition: all 0.2s;
+			font-family: "Source Sans Pro", sans-serif;
+			font-weight: 300;
+			white-space: nowrap;
+			flex-shrink: 0;
+		}
+		.details-btn:hover {
+			border-color: #ffffff;
+			color: #ffffff;
+			background: rgba(255,255,255,0.07);
+		}
+
+		/* ── Expanded overlay ────────────────────────── */
+		.overlay {
+			display: none;
+			position: fixed;
+			inset: 0;
+			background: rgba(0,0,0,0.78);
+			z-index: 1000;
+			align-items: center;
+			justify-content: center;
+			padding: 2rem;
+			overflow-y: auto;
+		}
+		.overlay.active {
+			display: flex;
+		}
+		.overlay-panel {
+			background: #1e2326;
+			border: 1px solid rgba(255,255,255,0.2);
+			border-radius: 4px;
+			width: 100%;
+			max-width: 740px;
+			max-height: 88vh;
+			overflow-y: auto;
+			padding: 2.5rem;
+			position: relative;
+			animation: overlayIn 0.3s ease;
+		}
+		.overlay-panel::-webkit-scrollbar { width: 4px; }
+		.overlay-panel::-webkit-scrollbar-track { background: transparent; }
+		.overlay-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+		@keyframes overlayIn {
+			from { opacity: 0; transform: translateY(16px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+
+		/* Navigation arrows inside overlay */
+		.overlay-nav {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background: transparent;
+			border: 1px solid rgba(255,255,255,0.18);
+			color: rgba(255,255,255,0.45);
+			border-radius: 50%;
+			width: 36px;
+			height: 36px;
+			font-size: 1rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s;
+			font-family: "Source Sans Pro", sans-serif;
+			z-index: 10;
+		}
+		.overlay-nav:hover:not(:disabled) {
+			border-color: #ffffff;
+			color: #ffffff;
+			background: rgba(255,255,255,0.07);
+		}
+		.overlay-nav:disabled {
+			opacity: 0.15;
+			cursor: default;
+		}
+		.overlay-nav-prev { left: -52px; }
+		.overlay-nav-next { right: -52px; }
+
+		.overlay-close {
+			position: absolute;
+			top: 1.25rem;
+			right: 1.25rem;
+			background: transparent;
+			border: 1px solid rgba(255,255,255,0.2);
+			color: rgba(255,255,255,0.5);
+			border-radius: 50%;
+			width: 32px;
+			height: 32px;
+			font-size: 0.9rem;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s;
+			font-family: "Source Sans Pro", sans-serif;
+		}
+		.overlay-close:hover {
+			border-color: #ffffff;
+			color: #ffffff;
+			background: rgba(255,255,255,0.07);
+		}
+
+		/* Overlay nav counter */
+		.overlay-counter {
+			position: absolute;
+			bottom: 1.25rem;
+			right: 1.75rem;
+			font-size: 0.65rem;
+			letter-spacing: 0.18rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.25);
+		}
+
+		.overlay-image {
+			width: 100%;
+			height: 240px;
+			object-fit: cover;
+			border-radius: 3px;
+			margin-bottom: 1.75rem;
+			filter: brightness(0.88);
+			display: block;
+		}
+		.overlay-image.hidden { display: none; }
+
+		.overlay-category {
+			font-size: 0.65rem;
+			letter-spacing: 0.22rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.4);
+			margin: 0 0 0.5rem;
+		}
+		.overlay-title {
+			font-size: 1.5rem;
+			font-weight: 600;
+			color: #ffffff;
+			text-transform: uppercase;
+			letter-spacing: 0.2rem;
+			margin: 0 0 0.5rem;
+			line-height: 1.3;
+			padding-right: 2.5rem;
+		}
+		.overlay-divider {
+			width: 50px;
+			height: 1px;
+			background: rgba(255,255,255,0.4);
+			margin: 0 0 1.5rem;
+		}
+		.overlay-section {
+			margin-bottom: 1.4rem;
+		}
+		.overlay-section-label {
+			font-size: 0.65rem;
+			letter-spacing: 0.22rem;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.35);
+			margin: 0 0 0.5rem;
+			border-bottom: 1px solid rgba(255,255,255,0.08);
+			padding-bottom: 0.4rem;
+		}
+		.overlay-section p {
+			font-size: 0.9rem;
+			color: rgba(255,255,255,0.75);
+			line-height: 1.7;
+			margin: 0;
+		}
+		.overlay-section ul {
+			margin: 0;
+			padding-left: 1.25rem;
+			list-style: disc;
+		}
+		.overlay-section ul li {
+			font-size: 0.9rem;
+			color: rgba(255,255,255,0.75);
+			line-height: 1.7;
+			padding-left: 0.25rem;
+			margin-bottom: 0.3rem;
+		}
+		.overlay-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.4rem;
+			margin-top: 1.5rem;
+			padding-top: 1.5rem;
+			border-top: 1px solid rgba(255,255,255,0.08);
+			padding-bottom: 1.5rem;
+		}
+		.overlay-tags .tag {
+			font-size: 0.65rem;
+		}
+
+		/* ── BG (match main site) ────────────────────── */
+		#bg {
+			position: fixed;
+			top: 0; left: 0;
+			width: 100%; height: 100vh;
+			z-index: 1;
+		}
+		#bg::before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			background-image: linear-gradient(to top, rgba(19,21,25,0.5), rgba(19,21,25,0.5)),
+				url("images/overlay.png");
+			background-size: auto, 256px 256px;
+			background-position: center, center;
+			background-repeat: no-repeat, repeat;
+			z-index: 2;
+		}
+		#bg::after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			transform: scale(1.125);
+			background-image: url("images/bg.jpg");
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			z-index: 1;
+		}
+
+		/* ── Main content wrapper ────────────────────── */
+		#page-wrap {
+			position: relative;
+			z-index: 3;
+			min-height: 100vh;
+		}
+
+		/* ── Responsive ──────────────────────────────── */
+		@media (max-width: 900px) {
+			.overlay-nav-prev { left: -44px; }
+			.overlay-nav-next { right: -44px; }
+		}
+		@media (max-width: 800px) {
+			/* Hide side nav arrows; use swipe or keyboard */
+			.overlay-nav { display: none; }
+		}
+		@media (max-width: 736px) {
+			.card-grid {
+				grid-template-columns: 1fr;
+				padding: 0 1.25rem 4rem;
+			}
+			.flip-card { height: 360px; }
+			.overlay-panel { padding: 1.75rem 1.25rem; }
+			.overlay-title { font-size: 1.2rem; }
+			.back-link { padding: 1.5rem 1.25rem; }
+		}
+		@media (max-width: 480px) {
+			.page-header { padding: 0.5rem 1.25rem 2rem; }
+			.page-header h1 { font-size: 1.5rem; }
+		}
+	</style>
+</head>
+<body class="is-preload">
+
+<div id="transition-curtain"></div>
+<div id="bg"></div>
+
+<div id="page-wrap">
+
+	<a href="index.html" class="back-link" aria-label="Back to home">
+		<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 4.3L7 10l5.7 5.7-1.4 1.4L4.2 10l7.1-7.1z"/></svg>
+		Back to home
+	</a>
+
+	<div class="page-header">
+		<h1>Projects</h1>
+		<div class="underline"></div>
+		<p>Click any card to explore &mdash; click again for full details</p>
+	</div>
+
+	<div class="filter-wrap">
+		<div class="filter-bar" role="group" aria-label="Filter projects by category">
+			<button class="filter-btn active" data-filter="all">All</button>
+			<button class="filter-btn" data-filter="fluids">Fluids</button>
+			<button class="filter-btn" data-filter="thermal">Thermal</button>
+			<button class="filter-btn" data-filter="aerospace">Aerospace</button>
+			<button class="filter-btn" data-filter="simulation">Simulation</button>
+		</div>
+		<div class="filter-count" id="filterCount" aria-live="polite"></div>
+	</div>
+
+	<div class="card-grid" id="cardGrid" role="list">
+
+		<!-- ── Card 1 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="fluids aerospace"
+			data-title="Flow Characterization Study"
+			data-cat-label="Fluids &middot; Aerospace"
+			data-img=""
+			data-problem="Characterize internal flow behavior and pressure losses within a complex duct geometry relevant to aerospace inlet design."
+			data-approach="Conducted a combination of experimental pressure-tap measurements and analytical modeling to quantify loss coefficients at key cross-sections under varying Reynolds number conditions."
+			data-tools="Differential pressure transducers, pitot-static probes, MATLAB for data reduction and regression analysis"
+			data-outcome="Developed a validated pressure-loss correlation for the test geometry, reducing uncertainty in downstream CFD boundary conditions by 30%."
+			data-tags="Fluid Mechanics,Pressure Loss,MATLAB,Experimental Testing,Reynolds Number">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(80,160,255,0.6)">
+						<span class="placeholder-icon">&#10148;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Fluids &middot; Aerospace</p>
+						<h3 class="card-title">Flow Characterization Study</h3>
+						<p class="card-summary">Pressure-loss characterization of a complex duct geometry using experimental measurements and analytical modeling.</p>
+						<div class="tag-row">
+							<span class="tag">Fluid Mechanics</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">Experimental</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="Flow Characterization Study details">
+					<div class="back-header">
+						<h3 class="back-title">Flow Characterization Study</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>Characterize internal flow behavior and quantify pressure losses within a complex duct geometry.</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>Validated pressure-loss correlation developed</li>
+							<li>CFD boundary condition uncertainty reduced 30%</li>
+							<li>Tested across multiple Reynolds number regimes</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">Fluid Mechanics</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">Experimental</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for Flow Characterization Study">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Card 2 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="thermal"
+			data-title="Thermal Management System"
+			data-cat-label="Thermal &middot; Experimental"
+			data-img=""
+			data-problem="Design and experimentally evaluate a passive thermal management solution for a heat-generating electronic component under real operating constraints."
+			data-approach="Iterated through multiple heat sink geometries using analytical fin theory before fabricating and testing two candidate designs. Instrumented with thermocouples at critical nodes and logged transient temperature response."
+			data-tools="Thermocouple arrays, data acquisition system, SolidWorks for geometry, analytical fin equations in MATLAB"
+			data-outcome="Final design maintained component junction temperature below the 85&deg;C threshold across all test conditions. Improved heat dissipation rate by 40% over the baseline geometry."
+			data-tags="Heat Transfer,Thermocouple,SolidWorks,Fin Theory,Thermal Design">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(255,120,60,0.7)">
+						<span class="placeholder-icon">&#9650;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Thermal &middot; Experimental</p>
+						<h3 class="card-title">Thermal Management System</h3>
+						<p class="card-summary">Passive heat sink design and experimental validation for an electronics thermal management application under real operating constraints.</p>
+						<div class="tag-row">
+							<span class="tag">Heat Transfer</span>
+							<span class="tag">SolidWorks</span>
+							<span class="tag">Thermal Design</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="Thermal Management System details">
+					<div class="back-header">
+						<h3 class="back-title">Thermal Management System</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>Design a passive thermal solution maintaining component temps below 85&deg;C under real operating loads.</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>40% improvement in heat dissipation over baseline</li>
+							<li>Junction temp held below 85&deg;C across all test cases</li>
+							<li>Two candidate geometries fabricated and compared</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">Heat Transfer</span>
+							<span class="tag">SolidWorks</span>
+							<span class="tag">Fin Theory</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for Thermal Management System">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Card 3 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="aerospace simulation"
+			data-title="Aerodynamic Analysis &mdash; Wing Profile"
+			data-cat-label="Aerospace &middot; Simulation"
+			data-img=""
+			data-problem="Evaluate the aerodynamic performance of a candidate airfoil section for a low-Reynolds-number application, quantifying lift, drag, and pressure distribution."
+			data-approach="Combined analytical thin-airfoil theory with CFD simulation to build confidence in results. Validated against published experimental data before running parametric angle-of-attack sweeps."
+			data-tools="MATLAB for analytical modeling, CFD solver for simulation, Python for post-processing and visualization"
+			data-outcome="Identified optimal angle-of-attack operating range yielding peak L/D ratio. Results directly informed airfoil selection for the competition aircraft design."
+			data-tags="CFD,Aerodynamics,MATLAB,Python,Lift-to-Drag,Low Reynolds Number">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(140,200,120,0.6)">
+						<span class="placeholder-icon">&#10006;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Aerospace &middot; Simulation</p>
+						<h3 class="card-title">Aerodynamic Analysis &mdash; Wing Profile</h3>
+						<p class="card-summary">CFD and analytical evaluation of airfoil performance at low Reynolds numbers, including lift-drag characterization and pressure distribution mapping.</p>
+						<div class="tag-row">
+							<span class="tag">CFD</span>
+							<span class="tag">Aerodynamics</span>
+							<span class="tag">MATLAB</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="Aerodynamic Analysis details">
+					<div class="back-header">
+						<h3 class="back-title">Aerodynamic Analysis</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>Quantify lift, drag, and pressure distribution for a candidate airfoil at low Reynolds numbers.</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>Optimal AoA range identified for peak L/D</li>
+							<li>CFD results validated against published data</li>
+							<li>Directly informed competition aircraft selection</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">CFD</span>
+							<span class="tag">Aerodynamics</span>
+							<span class="tag">Python</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for Aerodynamic Analysis">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Card 4 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="simulation fluids"
+			data-title="Computational Heat Transfer &mdash; FDM"
+			data-cat-label="Simulation &middot; Thermal"
+			data-img=""
+			data-problem="Simulate 2D transient heat conduction in a solid domain with mixed boundary conditions to validate analytical solutions and explore mesh sensitivity."
+			data-approach="Implemented an explicit finite-difference method in MATLAB. Verified against a known analytical solution on a coarse grid before refining mesh resolution. Parametrically studied the effect of Biot number on temperature distribution."
+			data-tools="MATLAB (custom FDM solver), analytical benchmark solutions for verification"
+			data-outcome="Demonstrated mesh convergence at 50&times;50 nodes. Identified critical Bi threshold above which convective resistance dominates. Solver reused as a validation tool for subsequent thermal experiments."
+			data-tags="FDM,Heat Conduction,MATLAB,Numerical Methods,Mesh Convergence,Boundary Conditions">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(200,150,255,0.6)">
+						<span class="placeholder-icon">&#11035;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Simulation &middot; Thermal</p>
+						<h3 class="card-title">Computational Heat Transfer &mdash; FDM</h3>
+						<p class="card-summary">Custom explicit finite-difference solver for 2D transient heat conduction with mixed BCs, mesh convergence study, and Biot number parametrics.</p>
+						<div class="tag-row">
+							<span class="tag">FDM</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">Numerical Methods</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="Computational Heat Transfer details">
+					<div class="back-header">
+						<h3 class="back-title">Computational Heat Transfer</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>Simulate transient 2D conduction with mixed BCs and validate against analytical benchmarks.</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>Mesh convergence confirmed at 50&times;50 nodes</li>
+							<li>Critical Biot number threshold identified</li>
+							<li>Solver repurposed as validation tool for lab experiments</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">FDM</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">Thermal</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for Computational Heat Transfer">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Card 5 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="aerospace fluids"
+			data-title="MS Thesis &mdash; [Your Thesis Title]"
+			data-cat-label="Aerospace &middot; Research"
+			data-img=""
+			data-problem="[Replace with your actual thesis problem statement &mdash; what gap in knowledge or engineering challenge were you addressing?]"
+			data-approach="[Describe your methodology &mdash; experimental, computational, analytical, or a combination. What made your approach defensible?]"
+			data-tools="[List the specific tools, software, and equipment central to your work]"
+			data-outcome="[State your key findings and contributions &mdash; be as specific and quantitative as possible]"
+			data-tags="MS Thesis,University of Delaware,Aerospace,Research">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(255,210,80,0.6)">
+						<span class="placeholder-icon">&#8943;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Aerospace &middot; Research</p>
+						<h3 class="card-title">MS Thesis</h3>
+						<p class="card-summary">Master's thesis research at the University of Delaware. Replace this with your actual thesis title and a one-sentence summary of the work.</p>
+						<div class="tag-row">
+							<span class="tag">MS Thesis</span>
+							<span class="tag">University of Delaware</span>
+							<span class="tag">Research</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="MS Thesis details">
+					<div class="back-header">
+						<h3 class="back-title">MS Thesis Research</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>[Replace with your actual thesis problem statement.]</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>[Replace with specific, quantitative findings]</li>
+							<li>[What did you contribute that wasn't known before?]</li>
+							<li>[Any publications, presentations, or industry impact?]</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">MS Thesis</span>
+							<span class="tag">Research</span>
+							<span class="tag">Aerospace</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for MS Thesis">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Card 6 ─────────────────────────────────── -->
+		<div class="flip-card" role="listitem" tabindex="0"
+			data-category="fluids simulation"
+			data-title="System Pressure Loss Analysis"
+			data-cat-label="Fluids &middot; Analysis"
+			data-img=""
+			data-problem="Predict and validate total pressure loss through a piping system with multiple fittings, bends, and area changes to support system design decisions."
+			data-approach="Applied minor and major loss correlations analytically, then cross-checked against experimental measurements at representative flow conditions. Identified dominant loss contributors and sensitivity to flow rate."
+			data-tools="MATLAB for system modeling, pressure gauges and flow meters for experimental validation"
+			data-outcome="Analytical model agreed with measured data to within 8%. Identified two elbows as the primary loss contributors, informing a geometry change that reduced total system pressure drop by 22%."
+			data-tags="Pipe Flow,Pressure Loss,System Design,MATLAB,Experimental Validation">
+			<div class="flip-card-inner">
+				<div class="card-front">
+					<div class="card-image placeholder" style="--accent: rgba(80,200,200,0.6)">
+						<span class="placeholder-icon">&#10143;</span>
+					</div>
+					<div class="card-body">
+						<p class="card-category">Fluids &middot; Analysis</p>
+						<h3 class="card-title">System Pressure Loss Analysis</h3>
+						<p class="card-summary">Analytical and experimental characterization of pressure losses through a multi-fitting piping system, with design recommendations for loss reduction.</p>
+						<div class="tag-row">
+							<span class="tag">Pipe Flow</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">System Design</span>
+						</div>
+					</div>
+					<span class="flip-hint" aria-hidden="true">Click to flip</span>
+					<div class="card-fold-corner" aria-hidden="true"></div>
+				</div>
+				<div class="card-back" aria-label="System Pressure Loss Analysis details">
+					<div class="back-header">
+						<h3 class="back-title">System Pressure Loss Analysis</h3>
+						<button class="close-btn" aria-label="Flip back">&#215;</button>
+					</div>
+					<div class="back-divider"></div>
+					<div class="back-section">
+						<p class="back-section-label">Problem</p>
+						<p>Predict and validate total pressure loss to support piping system design decisions.</p>
+					</div>
+					<div class="back-section">
+						<p class="back-section-label">Key Results</p>
+						<ul>
+							<li>Model agreed with measured data to within 8%</li>
+							<li>Dominant loss contributors identified</li>
+							<li>Geometry change reduced pressure drop 22%</li>
+						</ul>
+					</div>
+					<div class="back-footer">
+						<div class="back-tags">
+							<span class="tag">Pipe Flow</span>
+							<span class="tag">MATLAB</span>
+							<span class="tag">Experimental</span>
+						</div>
+						<button class="details-btn" aria-label="View full details for System Pressure Loss Analysis">Full Details &rarr;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div><!-- /card-grid -->
+
+</div><!-- /page-wrap -->
+
+<!-- ── Expanded overlay ───────────────────────────── -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+	<div class="overlay-panel" id="overlayPanel">
+		<button class="overlay-nav overlay-nav-prev" id="overlayPrev" aria-label="Previous project">&#8592;</button>
+		<button class="overlay-nav overlay-nav-next" id="overlayNext" aria-label="Next project">&#8594;</button>
+		<button class="overlay-close" id="overlayCloseBtn" aria-label="Close details panel">&#215;</button>
+
+		<img src="" alt="" class="overlay-image hidden" id="overlayImg" />
+		<p class="overlay-category" id="overlayCat"></p>
+		<h2 class="overlay-title" id="overlayTitle"></h2>
+		<div class="overlay-divider"></div>
+		<div class="overlay-section">
+			<p class="overlay-section-label">Problem</p>
+			<p id="overlayProblem"></p>
+		</div>
+		<div class="overlay-section">
+			<p class="overlay-section-label">Approach</p>
+			<p id="overlayApproach"></p>
+		</div>
+		<div class="overlay-section">
+			<p class="overlay-section-label">Tools &amp; Methods</p>
+			<p id="overlayTools"></p>
+		</div>
+		<div class="overlay-section">
+			<p class="overlay-section-label">Outcome</p>
+			<p id="overlayOutcome"></p>
+		</div>
+		<div class="overlay-tags" id="overlayTags"></div>
+		<div class="overlay-counter" id="overlayCounter" aria-live="polite"></div>
+	</div>
+</div>
+
+<script>
+(function() {
+	'use strict';
+
+	/* ── Preload remove ──────────────────────────── */
+	window.addEventListener('load', function() {
+		setTimeout(function() {
+			document.body.classList.remove('is-preload');
+		}, 100);
+	});
+
+	/* ── Page exit transition ────────────────────── */
+	function navigateWithFade(url) {
+		var curtain = document.getElementById('transition-curtain');
+		curtain.classList.add('closing');
+		setTimeout(function() { window.location.href = url; }, 380);
+	}
+
+	document.addEventListener('click', function(e) {
+		var link = e.target.closest('a[href]');
+		if (!link) return;
+		var href = link.getAttribute('href');
+		if (!href || href.startsWith('#') || href.startsWith('http') ||
+			href.startsWith('mailto') || href.startsWith('tel')) return;
+		e.preventDefault();
+		navigateWithFade(href);
+	});
+
+	/* ── Filter with stagger animation ──────────── */
+	var filterBtns = document.querySelectorAll('.filter-btn');
+	var allCards   = Array.from(document.querySelectorAll('.flip-card'));
+	var countEl    = document.getElementById('filterCount');
+
+	function updateCount(visible) {
+		countEl.classList.add('updating');
+		setTimeout(function() {
+			countEl.textContent = visible + ' project' + (visible !== 1 ? 's' : '');
+			countEl.classList.remove('updating');
+		}, 160);
+	}
+
+	function applyFilter(filter) {
+		/* First, animate out cards that will be hidden */
+		var toHide  = [];
+		var toShow  = [];
+
+		allCards.forEach(function(card) {
+			var cats = card.getAttribute('data-category') || '';
+			var match = filter === 'all' || cats.indexOf(filter) > -1;
+			if (match) {
+				toShow.push(card);
+			} else {
+				toHide.push(card);
+				card.classList.remove('flipped');
+			}
+		});
+
+		/* Exit animation for hidden cards */
+		toHide.forEach(function(card) {
+			card.classList.add('filter-exit');
+		});
+
+		setTimeout(function() {
+			toHide.forEach(function(card) {
+				card.classList.add('hidden');
+				card.classList.remove('filter-exit');
+			});
+
+			/* Stagger entrance for visible cards */
+			toShow.forEach(function(card, i) {
+				card.classList.remove('hidden');
+				card.classList.remove('filter-enter');
+				/* Force reflow to restart animation */
+				void card.offsetWidth;
+				card.style.animationDelay = (i * 55) + 'ms';
+				card.classList.add('filter-enter');
+			});
+
+			updateCount(toShow.length);
+
+			/* Clean up animation class after it completes */
+			setTimeout(function() {
+				toShow.forEach(function(card) {
+					card.classList.remove('filter-enter');
+					card.style.animationDelay = '';
+				});
+			}, toShow.length * 55 + 400);
+
+		}, toHide.length > 0 ? 220 : 0);
+	}
+
+	filterBtns.forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			filterBtns.forEach(function(b) { b.classList.remove('active'); });
+			btn.classList.add('active');
+			applyFilter(btn.getAttribute('data-filter'));
+		});
+	});
+
+	/* Initial count */
+	updateCount(allCards.length);
+
+	/* ── Card flip ───────────────────────────────── */
+	allCards.forEach(function(card) {
+		card.addEventListener('click', function(e) {
+			/* "Full Details" button opens overlay directly */
+			if (e.target.classList.contains('details-btn')) return;
+			if (e.target.classList.contains('close-btn')) return;
+
+			var alreadyFlipped = card.classList.contains('flipped');
+			allCards.forEach(function(c) { c.classList.remove('flipped'); });
+			if (!alreadyFlipped) {
+				card.classList.add('flipped');
+			}
+		});
+
+		/* Keyboard: Enter/Space flips, second Enter opens overlay */
+		card.addEventListener('keydown', function(e) {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				if (!card.classList.contains('flipped')) {
+					allCards.forEach(function(c) { c.classList.remove('flipped'); });
+					card.classList.add('flipped');
+				} else {
+					openOverlay(card);
+				}
+			}
+		});
+
+		/* Close-btn (flip back) */
+		var closeBtn = card.querySelector('.close-btn');
+		if (closeBtn) {
+			closeBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				card.classList.remove('flipped');
+			});
+		}
+
+		/* Details button opens overlay */
+		var detailsBtn = card.querySelector('.details-btn');
+		if (detailsBtn) {
+			detailsBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				openOverlay(card);
+			});
+		}
+	});
+
+	/* ── Touch / swipe to flip (mobile) ─────────── */
+	allCards.forEach(function(card) {
+		var touchStartX = null;
+		var touchStartY = null;
+
+		card.addEventListener('touchstart', function(e) {
+			touchStartX = e.touches[0].clientX;
+			touchStartY = e.touches[0].clientY;
+		}, { passive: true });
+
+		card.addEventListener('touchend', function(e) {
+			if (touchStartX === null) return;
+			var dx = e.changedTouches[0].clientX - touchStartX;
+			var dy = e.changedTouches[0].clientY - touchStartY;
+			/* Horizontal swipe > 45px, more horizontal than vertical */
+			if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+				e.preventDefault();
+				if (dx < 0) {
+					/* Swipe left = flip to back */
+					if (!card.classList.contains('flipped')) {
+						allCards.forEach(function(c) { c.classList.remove('flipped'); });
+						card.classList.add('flipped');
+					}
+				} else {
+					/* Swipe right = flip to front */
+					card.classList.remove('flipped');
+				}
+			}
+			touchStartX = null;
+			touchStartY = null;
+		}, { passive: false });
+	});
+
+	/* ── Overlay ─────────────────────────────────── */
+	var visibleCards = [];   /* cards currently passing the active filter */
+	var overlayIndex = 0;
+	var lastFocused  = null; /* element to return focus to on close */
+
+	function getVisibleCards() {
+		return allCards.filter(function(c) { return !c.classList.contains('hidden'); });
+	}
+
+	function populateOverlay(card) {
+		var img   = card.getAttribute('data-img')       || '';
+		var cat   = card.getAttribute('data-cat-label') || '';
+		var title = card.getAttribute('data-title')     || '';
+		var prob  = card.getAttribute('data-problem')   || '';
+		var appr  = card.getAttribute('data-approach')  || '';
+		var tools = card.getAttribute('data-tools')     || '';
+		var outc  = card.getAttribute('data-outcome')   || '';
+		var tags  = (card.getAttribute('data-tags')     || '').split(',');
+
+		var overlayImg = document.getElementById('overlayImg');
+		if (img) {
+			overlayImg.src = img;
+			overlayImg.alt = title;
+			overlayImg.classList.remove('hidden');
+		} else {
+			overlayImg.classList.add('hidden');
+		}
+
+		document.getElementById('overlayCat').textContent      = cat;
+		document.getElementById('overlayTitle').textContent    = title;
+		document.getElementById('overlayProblem').textContent  = prob;
+		document.getElementById('overlayApproach').textContent = appr;
+		document.getElementById('overlayTools').textContent    = tools;
+		document.getElementById('overlayOutcome').textContent  = outc;
+
+		var tagContainer = document.getElementById('overlayTags');
+		tagContainer.innerHTML = '';
+		tags.forEach(function(t) {
+			if (!t.trim()) return;
+			var span = document.createElement('span');
+			span.className = 'tag';
+			span.textContent = t.trim();
+			tagContainer.appendChild(span);
+		});
+
+		/* Update nav buttons */
+		document.getElementById('overlayPrev').disabled = overlayIndex <= 0;
+		document.getElementById('overlayNext').disabled = overlayIndex >= visibleCards.length - 1;
+
+		/* Counter */
+		document.getElementById('overlayCounter').textContent =
+			(overlayIndex + 1) + ' / ' + visibleCards.length;
+
+		/* Scroll overlay panel to top on change */
+		document.getElementById('overlayPanel').scrollTop = 0;
+	}
+
+	function openOverlay(card) {
+		visibleCards = getVisibleCards();
+		overlayIndex = visibleCards.indexOf(card);
+		if (overlayIndex < 0) overlayIndex = 0;
+
+		lastFocused = document.activeElement;
+		populateOverlay(card);
+
+		var overlay = document.getElementById('overlay');
+		overlay.classList.add('active');
+		document.body.style.overflow = 'hidden';
+
+		/* Move focus into overlay */
+		document.getElementById('overlayCloseBtn').focus();
+	}
+
+	function closeOverlay() {
+		document.getElementById('overlay').classList.remove('active');
+		document.body.style.overflow = '';
+		if (lastFocused) lastFocused.focus();
+	}
+
+	function navigateOverlay(dir) {
+		var next = overlayIndex + dir;
+		if (next < 0 || next >= visibleCards.length) return;
+		overlayIndex = next;
+		populateOverlay(visibleCards[overlayIndex]);
+	}
+
+	document.getElementById('overlayCloseBtn').addEventListener('click', closeOverlay);
+	document.getElementById('overlayPrev').addEventListener('click', function() { navigateOverlay(-1); });
+	document.getElementById('overlayNext').addEventListener('click', function() { navigateOverlay(1); });
+
+	/* Click backdrop to close */
+	document.getElementById('overlay').addEventListener('click', function(e) {
+		if (e.target === this) closeOverlay();
+	});
+
+	/* ── Keyboard handling ───────────────────────── */
+	document.addEventListener('keydown', function(e) {
+		var overlay = document.getElementById('overlay');
+		var isOpen  = overlay.classList.contains('active');
+
+		if (isOpen) {
+			if (e.key === 'Escape')      { closeOverlay(); }
+			if (e.key === 'ArrowLeft')   { navigateOverlay(-1); }
+			if (e.key === 'ArrowRight')  { navigateOverlay(1); }
+
+			/* Trap focus inside overlay */
+			if (e.key === 'Tab') {
+				var focusable = overlay.querySelectorAll(
+					'button:not(:disabled), [tabindex]:not([tabindex="-1"])'
+				);
+				var first = focusable[0];
+				var last  = focusable[focusable.length - 1];
+				if (e.shiftKey && document.activeElement === first) {
+					e.preventDefault();
+					last.focus();
+				} else if (!e.shiftKey && document.activeElement === last) {
+					e.preventDefault();
+					first.focus();
+				}
+			}
+		} else {
+			if (e.key === 'Escape') {
+				allCards.forEach(function(c) { c.classList.remove('flipped'); });
+			}
+		}
+	});
+
+})();
+</script>
+
+</body>
+</html>
