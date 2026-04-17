@@ -1,0 +1,279 @@
+/* ── Viewer page layout ──────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	overflow: hidden;
+	background: #1b1f22;
+	color: #ffffff;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+}
+
+#transition-curtain {
+	position: fixed;
+	inset: 0;
+	background: #1b1f22;
+	z-index: 9999;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.4s ease-in;
+}
+#transition-curtain.closing {
+	opacity: 1;
+	pointer-events: all;
+}
+
+#viewer-page {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+/* ── Top bar ─────────────────────────────────── */
+#viewer-topbar {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	padding: 0.85rem 2rem;
+	background: rgba(0, 0, 0, 0.45);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	flex-shrink: 0;
+	z-index: 10;
+}
+
+.back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	color: rgba(255, 255, 255, 0.55);
+	text-decoration: none;
+	font-size: 0.7rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	border-bottom: none;
+	flex-shrink: 0;
+	transition: color 0.2s;
+}
+.back-link:hover { color: #ffffff; border-bottom: none; }
+.back-link svg { width: 13px; height: 13px; fill: currentColor; }
+
+#viewer-title h1 {
+	font-size: 1rem;
+	font-weight: 600;
+	letter-spacing: 0.3rem;
+	text-transform: uppercase;
+	margin: 0 0 0.15rem;
+}
+#viewer-title p {
+	font-size: 0.65rem;
+	letter-spacing: 0.15rem;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.35);
+	margin: 0;
+}
+
+/* ── Viewer main area ────────────────────────── */
+#viewer-main {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+#viewer-canvas-mount {
+	position: absolute;
+	inset: 0;
+}
+
+#viewer-canvas-mount canvas {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* ── Selected part label ─────────────────────── */
+#part-label {
+	position: absolute;
+	top: 1.25rem;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	color: #ffffff;
+	font-size: 0.7rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	padding: 0.4rem 1.1rem;
+	border-radius: 2px;
+	pointer-events: none;
+	backdrop-filter: blur(4px);
+	transition: opacity 0.2s;
+	white-space: nowrap;
+}
+#part-label.hidden { display: none; }
+
+/* ── Explode controls panel ──────────────────── */
+#viewer-controls {
+	position: absolute;
+	bottom: 2rem;
+	left: 2rem;
+	background: rgba(10, 12, 14, 0.75);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
+	padding: 1.1rem 1.25rem 0.9rem;
+	width: 240px;
+	backdrop-filter: blur(6px);
+	z-index: 10;
+}
+
+.ctrl-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 0.5rem;
+}
+
+.ctrl-label {
+	font-size: 0.65rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.ctrl-pct {
+	font-size: 0.65rem;
+	letter-spacing: 0.1rem;
+	color: rgba(255, 255, 255, 0.35);
+	font-variant-numeric: tabular-nums;
+}
+
+#explode-slider {
+	width: 100%;
+	margin: 0 0 0.9rem;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 3px;
+	background: rgba(255, 255, 255, 0.15);
+	border-radius: 2px;
+	outline: none;
+	cursor: pointer;
+}
+#explode-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #ffffff;
+	cursor: pointer;
+	border: none;
+}
+#explode-slider::-moz-range-thumb {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #ffffff;
+	cursor: pointer;
+	border: none;
+}
+
+.ctrl-buttons {
+	display: flex;
+	gap: 0.4rem;
+	margin-bottom: 0.75rem;
+	flex-wrap: wrap;
+}
+
+.ctrl-btn {
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	color: rgba(255, 255, 255, 0.6);
+	border-radius: 2px;
+	padding: 0.3rem 0.65rem;
+	font-size: 0.6rem;
+	letter-spacing: 0.15rem;
+	text-transform: uppercase;
+	cursor: pointer;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+	transition: border-color 0.2s, color 0.2s;
+	white-space: nowrap;
+}
+.ctrl-btn:hover {
+	border-color: rgba(255, 255, 255, 0.6);
+	color: #ffffff;
+}
+
+.ctrl-hint {
+	font-size: 0.58rem;
+	letter-spacing: 0.1rem;
+	color: rgba(255, 255, 255, 0.25);
+	margin: 0;
+	text-align: center;
+}
+
+/* ── Parts panel ─────────────────────────────── */
+#parts-panel {
+	position: absolute;
+	top: 2rem;
+	right: 2rem;
+	background: rgba(10, 12, 14, 0.75);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
+	padding: 1rem 0;
+	width: 190px;
+	backdrop-filter: blur(6px);
+	z-index: 10;
+	max-height: calc(100% - 4rem);
+	overflow-y: auto;
+}
+
+.parts-panel-header {
+	font-size: 0.6rem;
+	letter-spacing: 0.25rem;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.35);
+	margin: 0 0 0.6rem;
+	padding: 0 1rem;
+}
+
+#parts-ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#parts-ul li {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.45rem 1rem;
+	font-size: 0.68rem;
+	letter-spacing: 0.1rem;
+	color: rgba(255, 255, 255, 0.55);
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+	user-select: none;
+}
+#parts-ul li:hover {
+	background: rgba(255, 255, 255, 0.06);
+	color: rgba(255, 255, 255, 0.85);
+}
+#parts-ul li.active {
+	background: rgba(255, 255, 255, 0.09);
+	color: #ffffff;
+}
+
+.parts-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	opacity: 0.85;
+}
+
+/* ── Responsive: collapse panels on small screens ── */
+@media screen and (max-width: 600px) {
+	#parts-panel { display: none; }
+	#viewer-controls { width: calc(100% - 3rem); }
+}
