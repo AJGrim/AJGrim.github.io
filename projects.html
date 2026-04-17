@@ -34,9 +34,13 @@
 			inset: 0;
 			background: #1b1f22;
 			z-index: 9999;
+			opacity: 1;
+			pointer-events: all;
+			transition: opacity 0.4s ease-out;
+		}
+		#transition-curtain.open {
 			opacity: 0;
 			pointer-events: none;
-			transition: opacity 0.4s ease-in;
 		}
 		#transition-curtain.closing {
 			opacity: 1;
@@ -379,29 +383,7 @@
 			line-height: 1.35;
 			margin: 0;
 		}
-		.close-btn {
-			background: transparent;
-			border: 1px solid rgba(255,255,255,0.2);
-			color: rgba(255,255,255,0.5);
-			border-radius: 50%;
-			width: 26px;
-			height: 26px;
-			font-size: 0.75rem;
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			flex-shrink: 0;
-			transition: all 0.2s;
-			font-family: "Source Sans Pro", sans-serif;
-		}
-		.close-btn:hover {
-			border-color: #ffffff;
-			color: #ffffff;
-			background: rgba(255,255,255,0.07);
-		}
-
-		.back-divider {
+.back-divider {
 			width: 40px;
 			height: 1px;
 			background: rgba(255,255,255,0.2);
@@ -783,8 +765,7 @@
 				<div class="card-back" aria-label="Flow Characterization Study details">
 					<div class="back-header">
 						<h3 class="back-title">Flow Characterization Study</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -842,8 +823,7 @@
 				<div class="card-back" aria-label="Thermal Management System details">
 					<div class="back-header">
 						<h3 class="back-title">Thermal Management System</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -901,8 +881,7 @@
 				<div class="card-back" aria-label="Aerodynamic Analysis details">
 					<div class="back-header">
 						<h3 class="back-title">Aerodynamic Analysis</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -960,8 +939,7 @@
 				<div class="card-back" aria-label="Computational Heat Transfer details">
 					<div class="back-header">
 						<h3 class="back-title">Computational Heat Transfer</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -1019,8 +997,7 @@
 				<div class="card-back" aria-label="MS Thesis details">
 					<div class="back-header">
 						<h3 class="back-title">MS Thesis Research</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -1078,8 +1055,7 @@
 				<div class="card-back" aria-label="System Pressure Loss Analysis details">
 					<div class="back-header">
 						<h3 class="back-title">System Pressure Loss Analysis</h3>
-						<button class="close-btn" aria-label="Flip back">&#215;</button>
-					</div>
+						</div>
 					<div class="back-divider"></div>
 					<div class="back-section">
 						<p class="back-section-label">Problem</p>
@@ -1145,8 +1121,14 @@
 (function() {
 	'use strict';
 
-	/* ── Preload remove ──────────────────────────── */
+	/* ── Entrance: lift curtain on load ─────────── */
 	window.addEventListener('load', function() {
+		/* rAF ensures the browser has painted the opaque curtain first */
+		requestAnimationFrame(function() {
+			requestAnimationFrame(function() {
+				document.getElementById('transition-curtain').classList.add('open');
+			});
+		});
 		setTimeout(function() {
 			document.body.classList.remove('is-preload');
 		}, 100);
@@ -1248,9 +1230,7 @@
 		card.addEventListener('click', function(e) {
 			/* "Full Details" button opens overlay directly */
 			if (e.target.classList.contains('details-btn')) return;
-			if (e.target.classList.contains('close-btn')) return;
-
-			var alreadyFlipped = card.classList.contains('flipped');
+var alreadyFlipped = card.classList.contains('flipped');
 			allCards.forEach(function(c) { c.classList.remove('flipped'); });
 			if (!alreadyFlipped) {
 				card.classList.add('flipped');
@@ -1270,16 +1250,7 @@
 			}
 		});
 
-		/* Close-btn (flip back) */
-		var closeBtn = card.querySelector('.close-btn');
-		if (closeBtn) {
-			closeBtn.addEventListener('click', function(e) {
-				e.stopPropagation();
-				card.classList.remove('flipped');
-			});
-		}
-
-		/* Details button opens overlay */
+/* Details button opens overlay */
 		var detailsBtn = card.querySelector('.details-btn');
 		if (detailsBtn) {
 			detailsBtn.addEventListener('click', function(e) {
