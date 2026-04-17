@@ -22,13 +22,6 @@
 		}
 
 		/* ── Page transitions ────────────────────────── */
-		@keyframes pageEnter {
-			from { opacity: 0; transform: translateY(18px); }
-			to   { opacity: 1; transform: translateY(0); }
-		}
-		#page-wrap {
-			animation: pageEnter 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-		}
 		#transition-curtain {
 			position: fixed;
 			inset: 0;
@@ -702,7 +695,7 @@
 		}
 	</style>
 </head>
-<body class="is-preload">
+<body>
 
 <div id="transition-curtain"></div>
 <div id="bg"></div>
@@ -1123,15 +1116,11 @@
 
 	/* ── Entrance: lift curtain on load ─────────── */
 	window.addEventListener('load', function() {
-		/* rAF ensures the browser has painted the opaque curtain first */
 		requestAnimationFrame(function() {
 			requestAnimationFrame(function() {
 				document.getElementById('transition-curtain').classList.add('open');
 			});
 		});
-		setTimeout(function() {
-			document.body.classList.remove('is-preload');
-		}, 100);
 	});
 
 	/* ── Page exit transition ────────────────────── */
