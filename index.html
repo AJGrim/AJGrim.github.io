@@ -26,8 +26,24 @@
 			">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<style>
+			#transition-curtain {
+				position: fixed;
+				inset: 0;
+				background: #1b1f22;
+				z-index: 9999;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.4s ease-in;
+			}
+			#transition-curtain.closing {
+				opacity: 1;
+				pointer-events: all;
+			}
+		</style>
 	</head>
 	<body class="is-preload">
+		<div id="transition-curtain"></div>
 
 		<!-- Wrapper -->
 			<div id="wrapper">
