@@ -64,10 +64,10 @@
 						<nav>
 							<ul>
 								<li><a href="#intro">Intro</a></li>
-								<li><a href="#work">Projects</a></li>
+								<li><a href="projects.html">Projects</a></li>
+								<li><a href="#skills">Skills</a></li>
 								<li><a href="#about">About</a></li>
 								<li><a href="#contact">Contact</a></li>
-								<!--<li><a href="#elements">Elements</a></li>-->
 							</ul>
 						</nav>
 					</header>
@@ -85,19 +85,121 @@
 								<p>I'm especially drawn to engineering challenges where efficiency, reliability, and performance are critical; particularly in aerospace and high-performance mechanical systems. I enjoy tackling problems that are not fully defined at the outset and refining them into testable, defensible solutions through careful analysis and iteration.</p>
 							</article>
 
-						<!-- Projects -->
-							<article id="work">
-								<h2 class="major">Projects</h2>
-								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
-								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
-								<p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus pharetra. Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat tempus.</p>
+						<!-- Skills -->
+							<article id="skills">
+								<h2 class="major">Skills</h2>
+
+								<style>
+									.skills-grid {
+										display: grid;
+										grid-template-columns: 1fr 1fr;
+										gap: 1.5rem 2rem;
+										margin-top: 1.25rem;
+									}
+									.skill-group h4 {
+										font-size: 0.7rem;
+										letter-spacing: 0.2rem;
+										text-transform: uppercase;
+										color: rgba(255,255,255,0.45);
+										margin: 0 0 0.6rem;
+										padding-bottom: 0.35rem;
+										border-bottom: 1px solid rgba(255,255,255,0.1);
+									}
+									.skill-chips {
+										display: flex;
+										flex-wrap: wrap;
+										gap: 0.4rem;
+									}
+									.chip {
+										font-size: 0.65rem;
+										letter-spacing: 0.1rem;
+										text-transform: uppercase;
+										border: 1px solid rgba(255,255,255,0.25);
+										color: rgba(255,255,255,0.7);
+										border-radius: 2px;
+										padding: 0.25rem 0.6rem;
+										white-space: nowrap;
+									}
+									@media screen and (max-width: 480px) {
+										.skills-grid { grid-template-columns: 1fr; }
+									}
+								</style>
+
+								<div class="skills-grid">
+
+									<div class="skill-group">
+										<h4>Fluid Mechanics</h4>
+										<div class="skill-chips">
+											<span class="chip">Internal Flow</span>
+											<span class="chip">Pressure Loss</span>
+											<span class="chip">Pipe Systems</span>
+											<span class="chip">Flow Characterization</span>
+											<span class="chip">Reynolds Number</span>
+										</div>
+									</div>
+
+									<div class="skill-group">
+										<h4>Heat Transfer</h4>
+										<div class="skill-chips">
+											<span class="chip">Conduction</span>
+											<span class="chip">Convection</span>
+											<span class="chip">Fin Theory</span>
+											<span class="chip">Thermal Design</span>
+											<span class="chip">Thermocouple DAQ</span>
+										</div>
+									</div>
+
+									<div class="skill-group">
+										<h4>Simulation &amp; Analysis</h4>
+										<div class="skill-chips">
+											<span class="chip">CFD</span>
+											<span class="chip">FDM</span>
+											<span class="chip">MATLAB</span>
+											<span class="chip">Python</span>
+											<span class="chip">Numerical Methods</span>
+										</div>
+									</div>
+
+									<div class="skill-group">
+										<h4>Aerospace</h4>
+										<div class="skill-chips">
+											<span class="chip">Aerodynamics</span>
+											<span class="chip">Airfoil Analysis</span>
+											<span class="chip">Lift &amp; Drag</span>
+											<span class="chip">Low-Re Flows</span>
+										</div>
+									</div>
+
+									<div class="skill-group">
+										<h4>Experimental Methods</h4>
+										<div class="skill-chips">
+											<span class="chip">Pressure Transducers</span>
+											<span class="chip">Pitot-Static Probes</span>
+											<span class="chip">Data Reduction</span>
+											<span class="chip">Uncertainty Analysis</span>
+										</div>
+									</div>
+
+									<div class="skill-group">
+										<h4>Engineering Practice</h4>
+										<div class="skill-chips">
+											<span class="chip">Technical Writing</span>
+											<span class="chip">SolidWorks</span>
+											<span class="chip">Documentation</span>
+											<span class="chip">Design Iteration</span>
+										</div>
+									</div>
+
+								</div>
 							</article>
 
 						<!-- About -->
 							<article id="about">
 								<h2 class="major">About</h2>
-								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
-								<p>Lorem ipsum dolor sit amet, consectetur et adipiscing elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices. Aliquam libero et malesuada fames ac ante ipsum primis in faucibus. Cras viverra ligula sit amet ex mollis mattis lorem ipsum dolor sit amet.</p>
+								<span class="image main"><img src="images/pic03.jpg" alt="Adam Grim" /></span>
+								<p>I grew up taking things apart to understand how they worked &mdash; engines, electronics, anything mechanical. That curiosity is what pulled me toward engineering, and it's still what drives how I approach problems today. I'm most at home when a challenge doesn't come with a clean answer and I have to build toward one through analysis and iteration.</p>
+								<p>Outside of work I tend to stay hands-on. I follow aerospace closely &mdash; both the engineering and the broader industry &mdash; and I'm genuinely interested in where propulsion and high-performance systems are heading. When I'm not behind a desk or in a lab, I'm usually working on something physical, whether that's a project in the garage or just getting outdoors.</p>
+								<p>I'm looking for roles where the problems are technically serious and the team cares about getting the details right. If that sounds like where you work, I'd like to hear from you.</p>
 							</article>
 
 						<!-- Contact -->
@@ -391,6 +493,29 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+
+		<script>
+			/* Page exit fade — fires for projects.html navigation */
+			function navigateWithFade(url) {
+				var curtain = document.getElementById('transition-curtain');
+				curtain.classList.add('closing');
+				setTimeout(function() {
+					window.location.href = url;
+				}, 380);
+			}
+
+			/* Intercept clicks on any link to projects.html */
+			document.addEventListener('click', function(e) {
+				var link = e.target.closest('a[href]');
+				if (!link) return;
+				var href = link.getAttribute('href');
+				if (href && href.indexOf('projects.html') > -1) {
+					e.preventDefault();
+					e.stopPropagation();
+					navigateWithFade(href);
+				}
+			}, true); /* useCapture: true so it fires before Dimension's own listeners */
+		</script>
 
 	</body>
 </html>
