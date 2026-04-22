@@ -614,6 +614,44 @@ body {
 	font-size: 0.65rem;
 }
 
+/* ── View Model button in overlay ───────────── */
+.overlay-model-wrap {
+	margin-top: 1.25rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid rgba(255,255,255,0.08);
+}
+.overlay-model-wrap.hidden { display: none; }
+
+.overlay-model-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	background: transparent;
+	border: 1px solid rgba(255,255,255,0.3);
+	color: rgba(255,255,255,0.7);
+	border-radius: 3px;
+	padding: 0.5rem 1.1rem;
+	font-size: 0.68rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	cursor: pointer;
+	transition: border-color 0.2s, color 0.2s, background 0.2s;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+}
+.overlay-model-btn svg {
+	width: 14px;
+	height: 14px;
+	fill: currentColor;
+	flex-shrink: 0;
+}
+.overlay-model-btn:hover {
+	border-color: #ffffff;
+	color: #ffffff;
+	background: rgba(255,255,255,0.07);
+}
+
 /* ── BG (match main site) ────────────────────── */
 #bg {
 	position: fixed;

@@ -272,6 +272,73 @@ body {
 	opacity: 0.85;
 }
 
+/* ── Empty / loading / error states ─────────── */
+#viewer-empty,
+#viewer-loading,
+#viewer-error {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	text-align: center;
+	padding: 2rem;
+	pointer-events: none;
+}
+#viewer-empty.hidden,
+#viewer-loading.hidden,
+#viewer-error.hidden { display: none; }
+
+.empty-icon {
+	font-size: 2.5rem;
+	opacity: 0.18;
+	line-height: 1;
+}
+.empty-heading {
+	font-size: 0.85rem;
+	letter-spacing: 0.25rem;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.5);
+	margin: 0;
+}
+.empty-sub {
+	font-size: 0.75rem;
+	color: rgba(255,255,255,0.3);
+	letter-spacing: 0.08rem;
+	margin: 0;
+	max-width: 320px;
+	line-height: 1.65;
+}
+.empty-sub strong { color: rgba(255,255,255,0.5); font-weight: 400; }
+
+.empty-link {
+	pointer-events: all;
+	margin-top: 0.5rem;
+	text-decoration: none;
+	display: inline-block;
+}
+
+/* Loading spinner */
+.loading-ring {
+	width: 36px;
+	height: 36px;
+	border: 2px solid rgba(255,255,255,0.1);
+	border-top-color: rgba(255,255,255,0.5);
+	border-radius: 50%;
+	animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#viewer-loading p {
+	font-size: 0.7rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.35);
+	margin: 0;
+}
+
 /* ── Responsive: collapse panels on small screens ── */
 @media screen and (max-width: 600px) {
 	#parts-panel { display: none; }

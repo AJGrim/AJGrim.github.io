@@ -7,9 +7,8 @@
 	<link rel="stylesheet" href="assets/css/main.css" />
 	<link rel="stylesheet" href="assets/css/viewer.css" />
 	<!--
-		Three.js is loaded from CDN via importmap.
-		For production / self-hosting, download the three.module.js and
-		OrbitControls.js files and update these paths to local assets.
+		Three.js loaded from CDN via importmap.
+		For self-hosting: download three.module.js + examples/jsm/ and update paths.
 	-->
 	<script type="importmap">
 	{
@@ -25,29 +24,50 @@
 
 <div id="viewer-page">
 
-	<!-- Top bar -->
+	<!-- Top bar — title is populated by JS from URL params -->
 	<div id="viewer-topbar">
 		<a href="projects.html" class="back-link" aria-label="Back to projects">
 			<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 4.3L7 10l5.7 5.7-1.4 1.4L4.2 10l7.1-7.1z"/></svg>
 			Projects
 		</a>
 		<div id="viewer-title">
-			<h1>Assembly Viewer</h1>
-			<p>Placeholder geometry &mdash; replace with your .glb model</p>
+			<h1 id="viewer-title-text">Assembly Viewer</h1>
+			<p id="viewer-title-sub">3D Model</p>
 		</div>
 	</div>
 
 	<!-- Viewer area -->
 	<div id="viewer-main">
 
-		<!-- Three.js renders into this div -->
+		<!-- Three.js canvas renders here -->
 		<div id="viewer-canvas-mount"></div>
 
-		<!-- Selected part name label -->
+		<!-- Empty state — shown when no model is loaded -->
+		<div id="viewer-empty">
+			<div class="empty-icon" aria-hidden="true">&#9671;</div>
+			<p class="empty-heading">No Model Loaded</p>
+			<p class="empty-sub">Open a project and click <strong>View Model</strong> to load it here.</p>
+			<a href="projects.html" class="ctrl-btn empty-link">Browse Projects</a>
+		</div>
+
+		<!-- Loading state -->
+		<div id="viewer-loading" class="hidden">
+			<div class="loading-ring" aria-hidden="true"></div>
+			<p id="viewer-loading-text">Loading model&hellip;</p>
+		</div>
+
+		<!-- Error state -->
+		<div id="viewer-error" class="hidden">
+			<div class="empty-icon" aria-hidden="true">&#9888;</div>
+			<p class="empty-heading">Model Failed to Load</p>
+			<p id="viewer-error-text" class="empty-sub"></p>
+		</div>
+
+		<!-- Selected part label (top-centre overlay) -->
 		<div id="part-label" class="hidden" aria-live="polite"></div>
 
-		<!-- Explode controls (bottom-left) -->
-		<div id="viewer-controls">
+		<!-- Explode controls (bottom-left) — hidden until model loads -->
+		<div id="viewer-controls" class="hidden">
 			<div class="ctrl-row">
 				<span class="ctrl-label">Explode</span>
 				<span id="explode-pct" class="ctrl-pct">0%</span>
@@ -55,15 +75,15 @@
 			<input type="range" id="explode-slider" min="0" max="100" value="0"
 			       aria-label="Explode assembly" />
 			<div class="ctrl-buttons">
-				<button id="btn-assemble"  class="ctrl-btn">Assemble</button>
-				<button id="btn-explode"   class="ctrl-btn">Explode All</button>
+				<button id="btn-assemble"   class="ctrl-btn">Assemble</button>
+				<button id="btn-explode"    class="ctrl-btn">Explode All</button>
 				<button id="btn-reset-view" class="ctrl-btn">Reset View</button>
 			</div>
 			<p class="ctrl-hint">Drag to orbit &nbsp;&middot;&nbsp; Scroll to zoom &nbsp;&middot;&nbsp; Click part to select</p>
 		</div>
 
-		<!-- Parts list (right side) -->
-		<div id="parts-panel">
+		<!-- Parts list (right side) — hidden until model loads -->
+		<div id="parts-panel" class="hidden">
 			<p class="parts-panel-header">Parts</p>
 			<ul id="parts-ul" aria-label="Assembly parts list"></ul>
 		</div>

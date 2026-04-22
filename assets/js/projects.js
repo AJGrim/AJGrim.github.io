@@ -24,7 +24,8 @@
 			approach:  'Conducted a combination of experimental pressure-tap measurements and analytical modeling to quantify loss coefficients at key cross-sections under varying Reynolds number conditions.',
 			tools:     'Differential pressure transducers, pitot-static probes, MATLAB for data reduction and regression analysis',
 			outcome:   'Developed a validated pressure-loss correlation for the test geometry, reducing uncertainty in downstream CFD boundary conditions by 30%.',
-			tags:      ['Fluid Mechanics', 'Pressure Loss', 'MATLAB', 'Experimental Testing', 'Reynolds Number']
+			tags:      ['Fluid Mechanics', 'Pressure Loss', 'MATLAB', 'Experimental Testing', 'Reynolds Number'],
+		model:     ''
 		},
 		{
 			category:    'thermal',
@@ -47,7 +48,8 @@
 			approach:  'Iterated through multiple heat sink geometries using analytical fin theory before fabricating and testing two candidate designs. Instrumented with thermocouples at critical nodes and logged transient temperature response.',
 			tools:     'Thermocouple arrays, data acquisition system, SolidWorks for geometry, analytical fin equations in MATLAB',
 			outcome:   'Final design maintained component junction temperature below the 85\u00b0C threshold across all test conditions. Improved heat dissipation rate by 40% over the baseline geometry.',
-			tags:      ['Heat Transfer', 'Thermocouple', 'SolidWorks', 'Fin Theory', 'Thermal Design']
+			tags:      ['Heat Transfer', 'Thermocouple', 'SolidWorks', 'Fin Theory', 'Thermal Design'],
+		model:     ''
 		},
 		{
 			category:    'aerospace simulation',
@@ -70,7 +72,8 @@
 			approach:  'Combined analytical thin-airfoil theory with CFD simulation to build confidence in results. Validated against published experimental data before running parametric angle-of-attack sweeps.',
 			tools:     'MATLAB for analytical modeling, CFD solver for simulation, Python for post-processing and visualization',
 			outcome:   'Identified optimal angle-of-attack operating range yielding peak L/D ratio. Results directly informed airfoil selection for the competition aircraft design.',
-			tags:      ['CFD', 'Aerodynamics', 'MATLAB', 'Python', 'Lift-to-Drag', 'Low Reynolds Number']
+			tags:      ['CFD', 'Aerodynamics', 'MATLAB', 'Python', 'Lift-to-Drag', 'Low Reynolds Number'],
+		model:     '' // e.g. 'models/airfoil-wing.glb' once exported
 		},
 		{
 			category:    'simulation fluids',
@@ -93,7 +96,8 @@
 			approach:  'Implemented an explicit finite-difference method in MATLAB. Verified against a known analytical solution on a coarse grid before refining mesh resolution. Parametrically studied the effect of Biot number on temperature distribution.',
 			tools:     'MATLAB (custom FDM solver), analytical benchmark solutions for verification',
 			outcome:   'Demonstrated mesh convergence at 50\u00d750 nodes. Identified critical Bi threshold above which convective resistance dominates. Solver reused as a validation tool for subsequent thermal experiments.',
-			tags:      ['FDM', 'Heat Conduction', 'MATLAB', 'Numerical Methods', 'Mesh Convergence', 'Boundary Conditions']
+			tags:      ['FDM', 'Heat Conduction', 'MATLAB', 'Numerical Methods', 'Mesh Convergence', 'Boundary Conditions'],
+		model:     ''
 		},
 		{
 			category:    'aerospace fluids',
@@ -116,7 +120,8 @@
 			approach:  '[Describe your methodology \u2014 experimental, computational, analytical, or a combination. What made your approach defensible?]',
 			tools:     '[List the specific tools, software, and equipment central to your work]',
 			outcome:   '[State your key findings and contributions \u2014 be as specific and quantitative as possible]',
-			tags:      ['MS Thesis', 'University of Delaware', 'Aerospace', 'Research']
+			tags:      ['MS Thesis', 'University of Delaware', 'Aerospace', 'Research'],
+		model:     ''
 		},
 		{
 			category:    'fluids simulation',
@@ -139,7 +144,8 @@
 			approach:  'Applied minor and major loss correlations analytically, then cross-checked against experimental measurements at representative flow conditions. Identified dominant loss contributors and sensitivity to flow rate.',
 			tools:     'MATLAB for system modeling, pressure gauges and flow meters for experimental validation',
 			outcome:   'Analytical model agreed with measured data to within 8%. Identified two elbows as the primary loss contributors, informing a geometry change that reduced total system pressure drop by 22%.',
-			tags:      ['Pipe Flow', 'Pressure Loss', 'System Design', 'MATLAB', 'Experimental Validation']
+			tags:      ['Pipe Flow', 'Pressure Loss', 'System Design', 'MATLAB', 'Experimental Validation'],
+		model:     ''
 		}
 	];
 
@@ -159,7 +165,8 @@
 			' data-approach="'  + p.approach          + '"' +
 			' data-tools="'     + p.tools             + '"' +
 			' data-outcome="'   + p.outcome           + '"' +
-			' data-tags="'      + p.tags.join(',')    + '">' +
+			' data-tags="'      + p.tags.join(',')    + '"' +
+			' data-model="'     + (p.model || '')     + '">' +
 			'<div class="flip-card-inner">' +
 				'<div class="card-front">' +
 					'<div class="card-image placeholder" style="--accent: ' + p.accent + '">' +
@@ -359,6 +366,7 @@
 		var tools = card.getAttribute('data-tools')     || '';
 		var outc  = card.getAttribute('data-outcome')   || '';
 		var tags  = (card.getAttribute('data-tags')     || '').split(',');
+		var model = card.getAttribute('data-model')     || '';
 
 		var overlayImg = document.getElementById('overlayImg');
 		if (img) {
@@ -385,6 +393,16 @@
 			span.textContent = t.trim();
 			tagContainer.appendChild(span);
 		});
+
+		var modelWrap = document.getElementById('overlayModelWrap');
+		var modelBtn  = document.getElementById('overlayModelBtn');
+		if (model) {
+			modelBtn.href = 'viewer-demo.html?model=' + encodeURIComponent(model) +
+			                '&title=' + encodeURIComponent(title);
+			modelWrap.classList.remove('hidden');
+		} else {
+			modelWrap.classList.add('hidden');
+		}
 
 		document.getElementById('overlayPrev').disabled = overlayIndex <= 0;
 		document.getElementById('overlayNext').disabled = overlayIndex >= visibleCards.length - 1;
