@@ -51,13 +51,10 @@
 						'<p class="back-summary">'  + p.summary  + '</p>' +
 					'</div>' +
 					'<div class="back-footer">' +
-						'<div class="back-tags">' + tagSpans(p.backTags) + '</div>' +
-						'<div class="back-actions">' +
-							modelBtn +
-							'<a class="details-btn" href="project-detail.html?slug=' + p.slug + '">' +
-								'Full Details &rarr;' +
-							'</a>' +
-						'</div>' +
+						modelBtn +
+						'<a class="details-btn" href="project-detail.html?slug=' + p.slug + '">' +
+							'Full Details &rarr;' +
+						'</a>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +
