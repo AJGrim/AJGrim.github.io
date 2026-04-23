@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en" style="background:#1b1f22">
+<head>
+	<title>Project | Adam Grim</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/project-detail.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body>
+
+<div id="transition-curtain"></div>
+<div id="bg"></div>
+
+<div id="page-wrap">
+
+	<a href="projects.html" class="back-link" id="backLink" aria-label="Back to projects">
+		<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.7 4.3L7 10l5.7 5.7-1.4 1.4L4.2 10l7.1-7.1z"/></svg>
+		All Projects
+	</a>
+
+	<!-- Hero -->
+	<div id="detail-hero">
+		<div id="detail-hero-image"></div>
+		<div id="detail-hero-overlay">
+			<p id="detail-category"></p>
+			<h1 id="detail-title"></h1>
+		</div>
+	</div>
+
+	<!-- Main content -->
+	<div id="detail-content">
+		<div class="detail-divider"></div>
+
+		<div class="detail-section">
+			<p class="detail-label">Problem</p>
+			<p id="detail-problem"></p>
+		</div>
+		<div class="detail-section">
+			<p class="detail-label">Approach</p>
+			<p id="detail-approach"></p>
+		</div>
+		<div class="detail-section">
+			<p class="detail-label">Tools &amp; Methods</p>
+			<p id="detail-tools"></p>
+		</div>
+		<div class="detail-section">
+			<p class="detail-label">Outcome</p>
+			<p id="detail-outcome"></p>
+		</div>
+
+		<div id="detail-tags"></div>
+
+		<div id="detail-model-wrap" class="hidden">
+			<a id="detail-model-btn" href="#" class="detail-model-btn">
+				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2L2 6v8l8 4 8-4V6L10 2zm0 2.18L16 7.5v5L10 15.82 4 12.5v-5L10 4.18z"/></svg>
+				View 3D Model
+			</a>
+		</div>
+	</div>
+
+	<!-- Prev / Next navigation -->
+	<div id="detail-nav">
+		<a id="detail-prev" href="#" class="detail-nav-btn hidden">&#8592; Previous</a>
+		<a id="detail-next" href="#" class="detail-nav-btn hidden">Next &#8594;</a>
+	</div>
+
+</div><!-- /page-wrap -->
+
+<script src="assets/js/transitions.js"></script>
+<script src="assets/js/projects-data.js"></script>
+<script src="assets/js/project-detail.js"></script>
+
+</body>
+</html>

@@ -28,7 +28,7 @@
 	<div class="page-header">
 		<h1>Projects</h1>
 		<div class="underline"></div>
-		<p>Click any card to explore &mdash; click again for full details</p>
+		<p>Click any card to flip &mdash; click Full Details for the project page</p>
 	</div>
 
 	<div class="filter-wrap">
@@ -46,45 +46,8 @@
 
 </div><!-- /page-wrap -->
 
-<!-- ── Expanded overlay ───────────────────────────── -->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
-	<div class="overlay-panel" id="overlayPanel">
-		<button class="overlay-nav overlay-nav-prev" id="overlayPrev" aria-label="Previous project">&#8592;</button>
-		<button class="overlay-nav overlay-nav-next" id="overlayNext" aria-label="Next project">&#8594;</button>
-		<button class="overlay-close" id="overlayCloseBtn" aria-label="Close details panel">&#215;</button>
-
-		<img src="" alt="" class="overlay-image hidden" id="overlayImg" />
-		<p class="overlay-category" id="overlayCat"></p>
-		<h2 class="overlay-title" id="overlayTitle"></h2>
-		<div class="overlay-divider"></div>
-		<div class="overlay-section">
-			<p class="overlay-section-label">Problem</p>
-			<p id="overlayProblem"></p>
-		</div>
-		<div class="overlay-section">
-			<p class="overlay-section-label">Approach</p>
-			<p id="overlayApproach"></p>
-		</div>
-		<div class="overlay-section">
-			<p class="overlay-section-label">Tools &amp; Methods</p>
-			<p id="overlayTools"></p>
-		</div>
-		<div class="overlay-section">
-			<p class="overlay-section-label">Outcome</p>
-			<p id="overlayOutcome"></p>
-		</div>
-		<div class="overlay-tags" id="overlayTags"></div>
-		<div id="overlayModelWrap" class="overlay-model-wrap hidden">
-			<a id="overlayModelBtn" href="#" class="overlay-model-btn">
-				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2L2 6v8l8 4 8-4V6L10 2zm0 2.18L16 7.5v5L10 15.82 4 12.5v-5L10 4.18z"/></svg>
-				View Model
-			</a>
-		</div>
-		<div class="overlay-counter" id="overlayCounter" aria-live="polite"></div>
-	</div>
-</div>
-
 <script src="assets/js/transitions.js"></script>
+<script src="assets/js/projects-data.js"></script>
 <script src="assets/js/projects.js"></script>
 
 </body>

@@ -1,0 +1,279 @@
+/* ── Reset / base ────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+	background: #1b1f22;
+	color: #ffffff;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+	margin: 0;
+	min-height: 100vh;
+}
+
+/* ── Page transition curtain ─────────────────── */
+#transition-curtain {
+	position: fixed;
+	inset: 0;
+	background: #1b1f22;
+	z-index: 9999;
+	opacity: 1;
+	pointer-events: all;
+	transition: opacity 0.4s ease-out;
+}
+#transition-curtain.open {
+	opacity: 0;
+	pointer-events: none;
+}
+#transition-curtain.closing {
+	opacity: 1;
+	pointer-events: all;
+}
+
+/* ── Back link ───────────────────────────────── */
+.back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: rgba(255,255,255,0.6);
+	text-decoration: none;
+	font-size: 0.7rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	border-bottom: none;
+	padding: 1.75rem 2.5rem;
+	transition: color 0.2s ease-in-out;
+	position: relative;
+	z-index: 4;
+}
+.back-link:hover { color: #ffffff; border-bottom: none; }
+.back-link svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+
+/* ── Background (matches main site) ─────────── */
+#bg {
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100vh;
+	z-index: 1;
+}
+#bg::before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	background-image: linear-gradient(to top, rgba(19,21,25,0.5), rgba(19,21,25,0.5)),
+		url("../../images/overlay.png");
+	background-size: auto, 256px 256px;
+	background-position: center, center;
+	background-repeat: no-repeat, repeat;
+	z-index: 2;
+}
+#bg::after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	transform: scale(1.125);
+	background-image: url("../../images/bg.jpg");
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	z-index: 1;
+}
+
+/* ── Page wrap ───────────────────────────────── */
+#page-wrap {
+	position: relative;
+	z-index: 3;
+	min-height: 100vh;
+}
+
+/* ── Hero ────────────────────────────────────── */
+#detail-hero {
+	position: relative;
+	width: 100%;
+	height: 320px;
+	overflow: hidden;
+}
+#detail-hero-image {
+	position: absolute;
+	inset: 0;
+	background-size: cover;
+	background-position: center;
+}
+#detail-hero-image.has-photo {
+	filter: brightness(0.45);
+}
+#detail-hero-image.placeholder {
+	background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#detail-hero-image.placeholder::before {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: var(--accent, rgba(255,255,255,0.2));
+	opacity: 0.75;
+}
+.hero-icon {
+	font-size: 5rem;
+	opacity: 0.12;
+	user-select: none;
+}
+
+#detail-hero-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 2.5rem;
+	background: linear-gradient(to top, rgba(27,31,34,0.92) 0%, transparent 100%);
+}
+#detail-category {
+	font-size: 0.62rem;
+	letter-spacing: 0.22rem;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.5);
+	margin: 0 0 0.4rem;
+}
+#detail-title {
+	font-size: 2rem;
+	font-weight: 600;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	margin: 0;
+	line-height: 1.25;
+	color: #ffffff;
+}
+
+/* ── Content ─────────────────────────────────── */
+#detail-content {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 2.5rem 2.5rem 3rem;
+}
+
+.detail-divider {
+	width: 50px;
+	height: 1px;
+	background: rgba(255,255,255,0.35);
+	margin: 0 0 2.25rem;
+}
+
+.detail-section {
+	margin-bottom: 2rem;
+}
+.detail-label {
+	font-size: 0.62rem;
+	letter-spacing: 0.22rem;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.35);
+	margin: 0 0 0.5rem;
+	border-bottom: 1px solid rgba(255,255,255,0.08);
+	padding-bottom: 0.4rem;
+}
+.detail-section p {
+	font-size: 0.92rem;
+	color: rgba(255,255,255,0.75);
+	line-height: 1.75;
+	margin: 0;
+}
+
+/* ── Tags ────────────────────────────────────── */
+#detail-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid rgba(255,255,255,0.08);
+	padding-bottom: 0.5rem;
+}
+.tag {
+	font-size: 0.6rem;
+	letter-spacing: 0.12rem;
+	text-transform: uppercase;
+	border: 1px solid rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.5);
+	border-radius: 2px;
+	padding: 0.2rem 0.55rem;
+}
+
+/* ── View Model button ───────────────────────── */
+#detail-model-wrap {
+	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid rgba(255,255,255,0.08);
+}
+#detail-model-wrap.hidden { display: none; }
+
+.detail-model-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	background: transparent;
+	border: 1px solid rgba(255,255,255,0.3);
+	color: rgba(255,255,255,0.7);
+	border-radius: 3px;
+	padding: 0.55rem 1.2rem;
+	font-size: 0.68rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	cursor: pointer;
+	transition: border-color 0.2s, color 0.2s, background 0.2s;
+	font-family: "Source Sans Pro", sans-serif;
+	font-weight: 300;
+}
+.detail-model-btn svg {
+	width: 14px;
+	height: 14px;
+	fill: currentColor;
+	flex-shrink: 0;
+}
+.detail-model-btn:hover {
+	border-color: #ffffff;
+	color: #ffffff;
+	background: rgba(255,255,255,0.07);
+}
+
+/* ── Prev / Next navigation ──────────────────── */
+#detail-nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 2.5rem 4rem;
+	border-top: 1px solid rgba(255,255,255,0.08);
+	padding-top: 2rem;
+}
+.detail-nav-btn {
+	color: rgba(255,255,255,0.5);
+	font-size: 0.68rem;
+	letter-spacing: 0.2rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+.detail-nav-btn:hover { color: #ffffff; }
+.detail-nav-btn.hidden { visibility: hidden; }
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 736px) {
+	#detail-hero { height: 260px; }
+	#detail-hero-overlay { padding: 1.5rem 1.25rem; }
+	#detail-title { font-size: 1.4rem; }
+	#detail-content { padding: 2rem 1.25rem 2.5rem; }
+	#detail-nav { padding: 1.5rem 1.25rem 3rem; }
+	.back-link { padding: 1.25rem; }
+}
+@media (max-width: 480px) {
+	#detail-title { font-size: 1.2rem; letter-spacing: 0.12rem; }
+}
